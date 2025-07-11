@@ -1,24 +1,4 @@
-import mongoose from 'mongoose';
-const contactSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    email: { type: String, required: false },
-    isFavourite: { type: Boolean, required: false, default: false },
-    contactType: {
-      type: String,
-      enum: ['work', 'home', 'personal'],
-      required: true,
-      default: 'personal',
-    },
-  },
-  {
-    timestamps: true,
-  },
-);
-
-const Contact = mongoose.model('Contact', contactSchema);
-
+import { Contact } from '../db/models/contacts.js';
 async function getAllContacts(req, res) {
   const contacts = await Contact.find();
 
@@ -31,6 +11,10 @@ async function getAllContacts(req, res) {
 async function getContact(req, res) {
   const contact = await Contact.findById(req.params.contactId);
 
+  if (contact === null) {
+    return res.status(404).json({ message: 'Contact not found' });
+  }
+
   res.json({
     status: 200,
     message: 'Successfully found contacts!',
@@ -38,5 +22,4 @@ async function getContact(req, res) {
   });
 }
 
-export { getAllContacts };
-export { getContact };
+export { getAllContacts, getContact };
