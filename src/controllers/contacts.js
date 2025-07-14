@@ -1,5 +1,4 @@
-import httpErrors from 'http-errors';
-const { createHttpError } = httpErrors;
+import createHttpError from 'http-errors';
 
 import {
   createContact,
@@ -20,7 +19,7 @@ export async function getContactController(request, response) {
   const contact = await getContact(request.params.contactId);
 
   if (contact === null) {
-    throw new createHttpError.NotFound('Contact not found');
+    throw new createHttpError(404, 'Contact not found');
   }
 
   response.json({
@@ -42,7 +41,7 @@ export async function createContactController(request, response) {
 export async function patchContactController(request, response) {
   const product = await upsertContact(request.params.contactId, request.body);
   if (product == null) {
-    throw new createHttpError.NotFound('Contact not found');
+    throw new createHttpError(404, 'Contact not found');
   }
   response.json({
     status: 200,
@@ -54,7 +53,7 @@ export async function patchContactController(request, response) {
 export async function deleteContactController(request, response) {
   const product = await deleteContact(request.params.contactId);
   if (product == null) {
-    throw new createHttpError.NotFound('Contact not found');
+    throw new createHttpError(404, 'Contact not found');
   }
   response.status(204).end();
 }
