@@ -8,16 +8,18 @@ import {
   patchContactController,
 } from '../controllers/contacts.js';
 
+import { isValidId } from '../middlewares/isValidId.js';
+
 const router = Router();
 
 router.get('/', ctrlWrapper(getAllContactsController));
 
-router.get('/:contactId', ctrlWrapper(getContactController));
+router.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 
 router.post('/', ctrlWrapper(createContactController));
 
-router.patch('/:contactId', ctrlWrapper(patchContactController));
+router.patch('/:contactId', isValidId, ctrlWrapper(patchContactController));
 
-router.delete('/:contactId', ctrlWrapper(deleteContactController));
+router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
 export default router;
