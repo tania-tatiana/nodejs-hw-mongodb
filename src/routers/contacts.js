@@ -10,15 +10,28 @@ import {
 
 import { isValidId } from '../middlewares/isValidId.js';
 
+import { contactSchema, updateContactSchema } from '../validation/contacts.js';
+import { validateBody } from '../middlewares/validateBody.js';
+
 const router = Router();
 
 router.get('/', ctrlWrapper(getAllContactsController));
 
 router.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 
-router.post('/', ctrlWrapper(createContactController));
+router.post(
+  '/',
+  validateBody(contactSchema),
+  ctrlWrapper(createContactController),
+);
 
-router.patch('/:contactId', isValidId, ctrlWrapper(patchContactController));
+router.patch(
+  '/:contactId',
+  isValidId,
+  validateBody(updateContactSchema),
+
+  ctrlWrapper(patchContactController),
+);
 
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 

@@ -1,11 +1,15 @@
+import createHttpError from 'http-errors';
+
 export function validateBody(schema) {
   return async (request, response, next) => {
     try {
-      const result = await schema.validateAsync(request.body);
-      console.log(result);
+      await schema.validateAsync(request.body, {
+        abortEarly: false,
+      });
       next();
     } catch (error) {
-      next(error);
+      const errors = error.details.map((detail) => detail.message);
+      next(new createHttpError.BadRequest(errors));
     }
   };
 }
