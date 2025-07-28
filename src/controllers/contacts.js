@@ -22,6 +22,7 @@ export async function getAllContactsController(request, response) {
     sortBy,
     sortOrder,
     filters,
+    request.user.id,
   );
   response.json({
     status: 200,
@@ -30,10 +31,14 @@ export async function getAllContactsController(request, response) {
   });
 }
 export async function getContactController(request, response) {
-  const contact = await getContact(request.params.contactId);
+  const contact = await getContact(request.params.contactId, request.user.id);
 
   if (contact === null) {
     throw new createHttpError(404, 'Contact not found');
+  }
+
+  if (contact.userId.toString() !== request.user.id.toString()) {
+    throw new createHttpError.Forbidden('Contact restricted');
   }
 
   response.json({
@@ -44,7 +49,10 @@ export async function getContactController(request, response) {
 }
 
 export async function createContactController(request, response) {
-  const product = await createContact(request.body);
+  const product = await createContact({
+    ...request.body,
+    userId: request.user.id,
+  });
   response.json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -53,7 +61,11 @@ export async function createContactController(request, response) {
 }
 
 export async function patchContactController(request, response) {
-  const product = await upsertContact(request.params.contactId, request.body);
+  const product = await upsertContact(
+    request.params.contactId,
+    request.body,
+    request.user.id,
+  );
   if (product == null) {
     throw new createHttpError(404, 'Contact not found');
   }
@@ -65,7 +77,10 @@ export async function patchContactController(request, response) {
 }
 
 export async function deleteContactController(request, response) {
-  const product = await deleteContact(request.params.contactId);
+  const product = await deleteContact(
+    request.params.contactId,
+    request.user.id,
+  );
   if (product == null) {
     throw new createHttpError(404, 'Contact not found');
   }
