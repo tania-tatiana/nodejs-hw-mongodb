@@ -26,7 +26,7 @@ export async function loginController(request, response) {
     expire: session.refreshTokenValidUntil,
   });
   response.json({
-    status: 201,
+    status: 200,
     message: 'Successfully logged in an user!',
     data: { accessToken: session.accessToken },
   });
