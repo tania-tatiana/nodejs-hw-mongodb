@@ -1,8 +1,12 @@
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
+import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
+
 import { User } from '../db/models/User.js';
 import { Session } from '../db/models/Session.js';
+import { getEnvVariable } from '../utils/getEnvVariable.js';
+import { sendMail } from '../utils/sendMail.js';
 export async function registerUser(payload) {
   const user = await User.findOne({ email: payload.email });
   if (user !== null) {
@@ -56,4 +60,56 @@ export async function refreshSession(sessionId, refreshToken) {
 
 export async function logOutUser(sessionId) {
   await Session.deleteOne({ _id: sessionId });
+}
+
+export async function sendResetEmail(email) {
+  const user = await User.findOne({ email });
+  const domainSendMail = getEnvVariable('APP_DOMAIN');
+  const sendMailFrom = getEnvVariable('SMTP_FROM');
+  if (user === null) {
+    throw new createHttpError.NotFound('User not found!');
+    // Or return;
+  }
+  // if (не вдалося надіслати листа) {
+  //   throw new createHttpError.InternalServerError("Failed to send the email, please try again later.")
+  // }
+  const token = jwt.sign(
+    {
+      sub: user._id,
+      name: user.name,
+    },
+    getEnvVariable('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
+  await sendMail({
+    from: `${sendMailFrom}`,
+    to: email,
+    subject: 'Reset password',
+    html: `<p>To reset password, please tap this <a href="${domainSendMail}/send-reset-email?token=${token}
+">Link</a></p>`,
+  });
+}
+
+export async function resetPassword(token, password) {
+  try {
+    console.log('Token:', token);
+    console.log('Secret:', getEnvVariable('JWT_SECRET'));
+    const decoded = jwt.verify(token, getEnvVariable('JWT_SECRET'));
+    const user = await User.findById(decoded.sub);
+    if (user === null) {
+      throw new createHttpError.NotFound('User not found!');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      throw new createHttpError.Unauthorized('Token is expired');
+    }
+    if (error.name === 'JsonWebTokenError') {
+      throw new createHttpError.Unauthorized('Token is unauthorized');
+    }
+    throw error;
+  }
 }
