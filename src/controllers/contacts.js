@@ -97,8 +97,8 @@ export async function patchContactController(request, response) {
   const product = await upsertContact(
     request.params.contactId,
     request.body,
-    avatar,
     request.user.id,
+    avatar,
   );
   if (product == null) {
     throw new createHttpError(404, 'Contact not found');
