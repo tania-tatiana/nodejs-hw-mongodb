@@ -8,6 +8,8 @@ import {
   patchContactController,
 } from '../controllers/contacts.js';
 
+import { upload } from '../middlewares/upload.js';
+
 import { isValidId } from '../middlewares/isValidId.js';
 
 import { contactSchema, updateContactSchema } from '../validation/contacts.js';
@@ -21,12 +23,14 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 
 router.post(
   '/',
+  upload.single('avatar'),
   validateBody(contactSchema),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
   '/:contactId',
+  upload.single('avatar'),
   isValidId,
   validateBody(updateContactSchema),
 

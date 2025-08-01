@@ -70,24 +70,22 @@ export async function sendResetEmail(email) {
     throw new createHttpError.NotFound('User not found!');
     // Or return;
   }
-  // if (не вдалося надіслати листа) {
-  //   throw new createHttpError.InternalServerError("Failed to send the email, please try again later.")
-  // }
   const token = jwt.sign(
     {
       sub: user._id,
       name: user.name,
+      email: user.email,
     },
     getEnvVariable('JWT_SECRET'),
     {
-      expiresIn: '15m',
+      expiresIn: '5m',
     },
   );
   await sendMail({
     from: `${sendMailFrom}`,
     to: email,
     subject: 'Reset password',
-    html: `<p>To reset password, please tap this <a href="${domainSendMail}/send-reset-email?token=${token}
+    html: `<p>To reset password, please tap this <a href="${domainSendMail}/reset-pwd?token=${token}
 ">Link</a></p>`,
   });
 }

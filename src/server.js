@@ -1,5 +1,5 @@
 import 'dotenv/config';
-
+import path from 'node:path';
 import express from 'express';
 import cors from 'cors';
 import pinoHttp from 'pino-http';
@@ -21,6 +21,8 @@ app.use(pinoHttp());
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use('/avatars', express.static(path.resolve('src/uploads/avatars')));
 
 app.use('/auth', authRoutes);
 

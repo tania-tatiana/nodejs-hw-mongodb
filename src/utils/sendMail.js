@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { getEnvVariable } from './getEnvVariable.js';
+import createHttpError from 'http-errors';
+
 import 'dotenv/config';
 
 const transporter = nodemailer.createTransport({
@@ -12,7 +14,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export function sendMail(mail) {
-  mail.from = 'bangchanka0310@gmail.com';
-  return transporter.sendMail(mail);
+export async function sendMail(mail) {
+  mail.from = getEnvVariable('SMTP_FROM');
+  try {
+    return await transporter.sendMail(mail);
+  } catch (error) {
+    console.log(error);
+
+    throw new createHttpError.InternalServerError(
+      'Failed to send the email, please try again later.',
+    );
+  }
 }
