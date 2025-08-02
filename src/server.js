@@ -22,7 +22,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.use('/avatars', express.static(path.resolve('src/uploads/avatars')));
+app.use('/photo', express.static(path.resolve('src/uploads/photo')));
 
 app.use('/auth', authRoutes);
 

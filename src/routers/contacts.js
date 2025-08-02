@@ -23,14 +23,14 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 
 router.post(
   '/',
-  upload.single('avatar'),
+  upload.single('photo'),
   validateBody(contactSchema),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
   '/:contactId',
-  upload.single('avatar'),
+  upload.single('photo'),
   isValidId,
   validateBody(updateContactSchema),
 
