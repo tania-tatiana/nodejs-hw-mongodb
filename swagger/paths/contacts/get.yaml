@@ -1,0 +1,28 @@
+tags:
+  - Contacts
+summary: Get all contacts
+operationId: getAllContact
+description: Get all contacts
+security:
+  - bearerAuth: []
+
+responces:
+  '200':
+  description: Succesfully get all contacts
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - status
+          - message
+          - data
+        properties:
+          status:
+            type: integer
+            example: 200
+          message:
+            type: string
+            example: Successfully found contacts!!
+          data:
+            type: array

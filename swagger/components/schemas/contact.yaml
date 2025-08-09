@@ -1,0 +1,41 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - email
+  - isFavourite
+  - contactType
+  - createdAt
+  - updatedAt
+properties:
+  _id:
+    type: string
+    description: Contact id
+    example: 68975d28d412ccd1953253a5
+  name:
+    type: string
+    description: Contact name
+    example: Natalie Sheeran
+  phoneNumber:
+    type: string
+    description: Contact phone phoneNumber
+    example: '+380000000002'
+  email:
+    type: string
+    description: Contact email
+    example: karina@mail.com
+  isFavourite:
+    type: string
+    description: Contact isFavourite
+    enum: ['true', 'false']
+    example: true/false
+  contactType:
+    type: string
+    description: Contact gender
+    enum: ['work', 'personal', 'home']
+    example: male
+  createdAt:
+    type: string
+  updatedAt:
+    type: string
