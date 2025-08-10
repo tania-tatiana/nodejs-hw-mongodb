@@ -19,23 +19,34 @@ properties:
     example: Natalie Sheeran
   phoneNumber:
     type: string
-    description: Contact phone phoneNumber
+    description: Contact phone number
     example: '+380000000002'
   email:
     type: string
     description: Contact email
     example: karina@mail.com
   isFavourite:
-    type: string
+    type: boolean
     description: Contact isFavourite
-    enum: ['true', 'false']
-    example: true/false
+    example: false
+    default: false
   contactType:
     type: string
-    description: Contact gender
+    description: Contact type
     enum: ['work', 'personal', 'home']
-    example: male
+  ownerId:
+    type: string
+    description: Owner id
+    example: 68975d28d412ccd1953253a5
+  photo:
+    type: string
+    description: Contact photo
+    default: null
   createdAt:
     type: string
+    format: date-time
+    example: 2025-07-28T22:12:26.669+00:00
   updatedAt:
     type: string
+    format: date-time
+    example: 2025-07-28T22:12:26.669+00:00

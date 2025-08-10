@@ -69,7 +69,7 @@ export async function createContactController(request, response) {
     photo = `http://localhost:3000/photo/${request.file.filename}`;
   }
 
-  const product = await createContact({
+  const contact = await createContact({
     ...request.body,
     photo,
     userId: request.user.id,
@@ -77,7 +77,7 @@ export async function createContactController(request, response) {
   response.json({
     status: 201,
     message: 'Successfully created a contact!',
-    data: product,
+    data: contact,
   });
 }
 
@@ -94,28 +94,28 @@ export async function patchContactController(request, response) {
     );
     photo = `http://localhost:3000/photo/${request.file.filename}`;
   }
-  const product = await upsertContact(
+  const contact = await upsertContact(
     request.params.contactId,
     request.body,
     request.user.id,
     photo,
   );
-  if (product == null) {
+  if (contact == null) {
     throw new createHttpError(404, 'Contact not found');
   }
   response.json({
     status: 200,
     message: 'Successfully patched a contact!',
-    data: product,
+    data: contact,
   });
 }
 
 export async function deleteContactController(request, response) {
-  const product = await deleteContact(
+  const contact = await deleteContact(
     request.params.contactId,
     request.user.id,
   );
-  if (product == null) {
+  if (contact == null) {
     throw new createHttpError(404, 'Contact not found');
   }
   response.status(204).end();
