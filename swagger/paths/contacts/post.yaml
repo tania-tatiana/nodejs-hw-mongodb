@@ -14,10 +14,10 @@ requestBody:
         required:
           - name
           - phoneNumber
-          - email
-          - isFavourite
+          # - email
+          # - isFavourite
           - contactType
-          - photo
+          # - photo
         properties:
           name:
             type: string

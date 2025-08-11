@@ -14,7 +14,7 @@
       "url": "http://127.0.0.1:3000"
     },
     {
-      "url": "https://nodejs-hw-mongodb-4-sk6a.onrender.com"
+      "url": "https://nodejs-hw-mongodb-5-idyp.onrender.com"
     }
   ],
   "tags": [
@@ -118,10 +118,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "email",
-                  "isFavourite",
-                  "contactType",
-                  "photo"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
@@ -446,24 +443,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Succesfully deleted contact!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    }
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "Succesfully deleted contact!"
           },
           "401": {
             "$ref": "#/components/responses/401"

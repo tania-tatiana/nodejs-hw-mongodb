@@ -57,18 +57,19 @@ export async function getContactController(request, response) {
 
 export async function createContactController(request, response) {
   let photo = null;
-  if (getEnvVariable('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(request.file.path);
-    await fs.unlink(request.file.path);
-    photo = result.secure_url;
-  } else {
-    await fs.rename(
-      request.file.path,
-      path.resolve('src/uploads/photo', request.file.filename),
-    );
-    photo = `http://localhost:3000/photo/${request.file.filename}`;
+  if (request.file) {
+    if (getEnvVariable('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(request.file.path);
+      await fs.unlink(request.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        request.file.path,
+        path.resolve('src/uploads/photo', request.file.filename),
+      );
+      photo = `http://localhost:3000/photo/${request.file.filename}`;
+    }
   }
-
   const contact = await createContact({
     ...request.body,
     photo,
